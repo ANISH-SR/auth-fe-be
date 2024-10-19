@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title>Auth website</title>
+</head>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+<script>
+    function signup(){
+        
+    }
+</script>
+<body>
+    <div>
+        Signup
+        <input id="signup-username" type="text" name="username" placeholder="Username">
+        <input id="signup-password" type="password" name="password" placeholder="Password">
+
+        <button onclick="signup()">Submit</button>
+    </div>
+
+    <div>
+        Signin
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+
+        <button onclick="signin()">Submit</button>
+    </div>
+
+    <div>
+        User Information
+        <div id="information"></div>
+    </div>
+    <div>
+        <button onclick="logout()">Logout</button>
+    </div>
+</body>
+</html>

@@ -9,12 +9,13 @@ app.use(express.json());
 
 const users = [];
 
-function logger(req,res,next){
+function logger(req, res, next) {
     console.log(req.method + " request came");
     next();
 }
 
-app.post("/signup",logger, (req, res) => {
+
+app.post("/signup", logger, (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -36,7 +37,7 @@ app.post("/signup",logger, (req, res) => {
 
 })
 
-app.post("/signin",logger, (req, res) => {
+app.post("/signin", logger, (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -61,25 +62,27 @@ app.post("/signin",logger, (req, res) => {
 
 })
 
-function auth(req,res,next){
+function auth(req, res, next) {
     const token = req.headers.token;
     const decoded_info = jwt.verify(token, JWT_SECRET);
 
-    if(decoded_info.username) {
+    if (decoded_info.username) {
         req.username = decoded_info.username;
 
         next();
     }
-    else{
+    else {
         res.json({
-            message:"You are not logged in"
+            message: "You are not logged in"
         })
     }
 }
 
 
-app.get("/me", logger, auth ,(req, res) => {
-    const found_user = users.find(u => u.username === req.username);          //we modified the req object in the auth middleware above
+app.get("/me", logger, auth, (req, res) => {
+    const current_user = req.username;
+
+    const found_user = users.find(u => u.username === current_user);          //we modified the req object in the auth middleware above
 
     if (found_user) {
         res.json({
