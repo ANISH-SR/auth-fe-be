@@ -5,8 +5,15 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
 <script>
-    function signup(){
-        
+    async function signup(){
+        const username = document.getElementById("signup-username").value;
+        const password = document.getElementById("signup-password").value;
+
+        await axios.post("http://localhost:3000/signup", {   //const response = (used for getting the output by using response.data) }
+            username: username,
+            password: password
+        })
+        alert("You are signed in!")
     }
 </script>
 <body>
