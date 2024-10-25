@@ -103,3 +103,4 @@ app.get("/me", logger, auth, (req, res) => {
 app.listen(PORT, () => {
     console.log(`Currently up and running on ${PORT}.`);
 });
+
