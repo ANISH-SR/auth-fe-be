@@ -1,11 +1,12 @@
 <html>
+
 <head>
     <title>Auth website</title>
 </head>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
 <script>
-    async function signup(){
+    async function signup() {
         const username = document.getElementById("signup-username").value;
         const password = document.getElementById("signup-password").value;
 
@@ -16,6 +17,7 @@
         alert("You are signed in!")
     }
 </script>
+
 <body>
     <div>
         Signup
@@ -41,4 +43,5 @@
         <button onclick="logout()">Logout</button>
     </div>
 </body>
+
 </html>
