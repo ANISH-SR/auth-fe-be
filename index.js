@@ -1,24 +1,14 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "anishlikestoskii";
-const PORT = 3000;
-
+const JWT_SECRET = "anishistrue"
 const app = express();
+const port = process.env.PORT || 3000;
+const users = [];
 
 app.use(express.json());
 
-const users = [];
 
-function logger(req, res, next) {
-    console.log(req.method + " request came");
-    next();
-}
-
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
-})
-
-app.post("/signup", logger, (req, res) => {
+app.post("/signup", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -26,81 +16,64 @@ app.post("/signup", logger, (req, res) => {
 
     if (user) {
         res.json({
-            message: "Account already exists."
+            message: "The username already exists"
         })
     }
-    users.push({
-        username: username,
-        password: password
-    });
+    else {
+        users.push({
+            "username": username,
+            "password": password
+        })
 
-    res.json({
-        message: "You are signed up"
-    })
+        res.json({
+            message: "You are signed up"
+        })
 
+    }
+
+    console.log(users);
 })
 
-app.post("/signin", logger, (req, res) => {
+app.post("/signin", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    const user_exists = users.find(u => u.username === username && u.password === password);
+    const user_found = users.find(u => u.username === username && u.password === password);
 
-    if (user_exists) {
-
+    if (user_found) {
         const token = jwt.sign({
-            username: username,
-        }, JWT_SECRET);
+            username
+        }, JWT_SECRET)
 
         res.json({
             token: token
-        });
-
+        })
     }
+
     else {
         res.json({
-            message: "Credentials are incorrect"
+            message: "Sorry, Incorrect Credentials"
         })
     }
 
 })
 
-function auth(req, res, next) {
+
+app.get("/me", (req, res) => {
     const token = req.headers.token;
-    const decoded_info = jwt.verify(token, JWT_SECRET);
+    const decoded_data = jwt.verify(token, JWT_SECRET);
+    const new_username = decoded_data.username;
 
-    if (decoded_info.username) {
-        req.username = decoded_info.username;
-
-        next();
-    }
-    else {
+    const foundUser = users.find(u => u.username === new_username);
+    if (foundUser) {
         res.json({
-            message: "You are not logged in"
-        })
-    }
-}
-
-
-app.get("/me", logger, auth, (req, res) => {
-    const current_user = req.username;
-
-    const found_user = users.find(u => u.username === current_user);          //we modified the req object in the auth middleware above
-
-    if (found_user) {
-        res.json({
-            username: found_user.username,
-            password: found_user.password
-        });
-    }
-    else {
-        res.json({
-            message: "Token invalid"
+            username: foundUser.username,
+            password: foundUser.password
         })
     }
 })
 
-app.listen(PORT, () => {
-    console.log(`Currently up and running on ${PORT}.`);
-});
+app.listen(port, () => {
+    console.log(`The server is listening at ${port}`)
+})
 
