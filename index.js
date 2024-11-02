@@ -1,14 +1,21 @@
 const express = require("express");
+
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "anishistrue"
+
 const app = express();
 const port = process.env.PORT || 3000;
+
 const users = [];
 
 app.use(express.json());
 
+function logger(req,res,next){
+    console.log(`${req.method} request came`);
+    next();
+}
 
-app.post("/signup", (req, res) => {
+app.post("/signup", logger, (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -34,7 +41,7 @@ app.post("/signup", (req, res) => {
     console.log(users);
 })
 
-app.post("/signin", (req, res) => {
+app.post("/signin",logger, (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -58,19 +65,26 @@ app.post("/signin", (req, res) => {
 
 })
 
-
-app.get("/me", (req, res) => {
+function auth(req,res,next){
     const token = req.headers.token;
     const decoded_data = jwt.verify(token, JWT_SECRET);
-    const new_username = decoded_data.username;
 
-    const foundUser = users.find(u => u.username === new_username);
-    if (foundUser) {
+    if(decoded_data.username){
+        req.username = decoded_data.username;
+        next();
+    }else{
+        res.json({
+            message: "You are not logged in"
+        })
+    }
+}
+
+app.get("/me", logger, auth, (req, res) => {
+    const foundUser = users.find(u => u.username === req.username);
         res.json({
             username: foundUser.username,
             password: foundUser.password
         })
-    }
 })
 
 app.listen(port, () => {
