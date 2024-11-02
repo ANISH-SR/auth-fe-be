@@ -14,6 +14,10 @@ function logger(req,res,next){
     console.log(`${req.method} request came`);
     next();
 }
+app.get("/", function (req, res) {
+    res.sendFile(__dirname + "/public/index.html");
+
+})
 
 app.post("/signup", logger, (req, res) => {
     const username = req.body.username;
@@ -49,7 +53,7 @@ app.post("/signin",logger, (req, res) => {
 
     if (user_found) {
         const token = jwt.sign({
-            username
+            username: user_found.username,
         }, JWT_SECRET)
 
         res.json({
