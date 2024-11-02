@@ -80,7 +80,9 @@ function auth(req,res,next){
 }
 
 app.get("/me", logger, auth, (req, res) => {
-    const foundUser = users.find(u => u.username === req.username);
+
+    const current_user = req.username;
+    const foundUser = users.find(u => u.username === current_user);
         res.json({
             username: foundUser.username,
             password: foundUser.password
