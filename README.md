@@ -1,1 +1,1 @@
-Simple Authentication site whcih connects fe and be. (Week6)
+Simple Authentication site which connects fe and be. (Week6)
